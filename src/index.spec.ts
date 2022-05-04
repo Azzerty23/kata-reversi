@@ -15,22 +15,56 @@ describe("Suggestions", function () {
     game = new Game(boardGame);
   });
   test("Should return an array of positions {x: number, y: number}", function () {
-    expect(game.suggestions).toEqual(
+    expect(game.getSuggestions()).toEqual(
       expect.arrayContaining([{ x: expect.any(Number), y: expect.any(Number) }])
     );
   });
 
-  test("Should appear after an opponent in right direction", function () {
+  test("Should appear after an opponent in one direction", function () {
+    const initialBoard: Board = [
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", "B", "W", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+    ];
     const expectedBoard: Board = [
       [".", ".", ".", ".", ".", ".", ".", "."],
       [".", ".", ".", ".", ".", ".", ".", "."],
       [".", ".", ".", ".", ".", ".", ".", "."],
       [".", ".", ".", "B", "W", "0", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+    ];
+    expect(game.play(initialBoard)).toEqual(expectedBoard);
+  });
+
+  test("Should appear after an opponent in multiple directions", function () {
+    const initialBoard: Board = [
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", "B", "W", ".", ".", "."],
       [".", ".", ".", "W", "B", ".", ".", "."],
       [".", ".", ".", ".", ".", ".", ".", "."],
       [".", ".", ".", ".", ".", ".", ".", "."],
       [".", ".", ".", ".", ".", ".", ".", "."],
     ];
-    expect(game.play()).toEqual(expectedBoard);
+    const expectedBoard: Board = [
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", "B", "W", "0", ".", "."],
+      [".", ".", "0", "W", "B", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+      [".", ".", ".", ".", ".", ".", ".", "."],
+    ];
+    expect(game.play(initialBoard)).toEqual(expectedBoard);
   });
 });

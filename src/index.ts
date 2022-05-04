@@ -56,35 +56,41 @@ export class Game {
   }
 
   // get positions of current player
-  get positions(): Position[] {
+  getPositions(
+    board: Board = this.board.state,
+    player: Player = this.currentPlayer
+  ): Position[] {
     const positions: Position[] = [];
-    this.board.state.map((row, rowIndex) => {
+    board.map((row, rowIndex) => {
       row.map((cell, cellIndex) =>
-        cell === this.currentPlayer
-          ? positions.push({ x: cellIndex, y: rowIndex })
-          : null
+        cell === player ? positions.push({ x: cellIndex, y: rowIndex }) : null
       );
     });
     return positions;
   }
 
-  get suggestions(): Position[] {
-    const positions = this.positions;
-    const board = this.board.state;
+  getSuggestions(
+    board = this.board.state,
+    player = this.currentPlayer
+  ): Position[] {
+    const positions = this.getPositions(board, player);
     const suggestions: Position[] = [];
     positions.forEach((position) => {
       // RIGHT DIRECTION
       if (board[position.y][position.x + 1] === opponent(this.currentPlayer)) {
         suggestions.push({ x: position.x + 2, y: position.y });
       }
+      // LEFT DIRECTION
+      if (board[position.y][position.x - 1] === opponent(this.currentPlayer)) {
+        suggestions.push({ x: position.x - 2, y: position.y });
+      }
     });
     return suggestions;
   }
 
-  play(): Board {
-    const board = this.board.state;
-    this.suggestions.forEach(({ x, y }) => {
-      // RIGHT DIRECTION
+  play(board = this.board.state, player = this.currentPlayer): Board {
+    const suggestions = this.getSuggestions(board, player);
+    suggestions.forEach(({ x, y }) => {
       board[y][x] = Cell.suggestion;
     });
     return board;
@@ -95,7 +101,7 @@ const boardGame = new BoardGame();
 const game = new Game(boardGame, Cell.player1);
 console.log(boardGame.display());
 console.log(game.currentPlayer);
-console.log("current positions : ", game.positions);
+console.log("current positions : ", game.getPositions());
 game.play();
-console.log("suggestions : ", game.suggestions);
+console.log("suggestions : ", game.getSuggestions());
 console.log(boardGame.display());
