@@ -1,0 +1,20 @@
+{
+  "name": "kata-reversi",
+  "version": "1.0.0",
+  "description": "https://codingdojo.org/kata/Reversi/",
+  "main": "src/index.ts",
+  "author": "Augustin de Louvencourt",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "jest": "^27.4.1",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.6.4"
+  },
+  "scripts": {
+    "build": "yarn tsc",
+    "test": "jest",
+    "start": "node dist/index.js"
+  }
+}
