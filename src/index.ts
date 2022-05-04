@@ -15,6 +15,22 @@ export type Board = Row[];
 
 export type Position = { x: number; y: number };
 
+// check if position inside board dimensions
+const dimensionsGuard = (
+  board: Board,
+  position: Position,
+  x: number,
+  y: number,
+  i: number
+) => {
+  return (
+    position.y + i * y < board.length &&
+    position.y + i * y >= 0 &&
+    position.x + i * x < board[board.length - 1].length &&
+    position.x + i * x >= 0
+  );
+};
+
 const initialState: Board = [
   [".", ".", ".", ".", ".", ".", ".", "."],
   [".", ".", ".", ".", ".", ".", ".", "."],
@@ -86,16 +102,21 @@ export class Game {
   ): Position[] {
     const positions = this.getPositions(board, player);
     const suggestions: Position[] = [];
+
     positions.forEach((position) => {
       Object.values(directions).forEach(({ x, y }) => {
         let i = 1;
         //   check if next cell is opponent
         while (
+          dimensionsGuard(board, position, x, y, i) &&
           board[position.y + i * y][position.x + i * x] === opponent(player)
         ) {
           i++;
           //   if cell is empty, set new suggestion
-          if (board[position.y + i * y][position.x + i * x] === Cell.empty) {
+          if (
+            dimensionsGuard(board, position, x, y, i) &&
+            board[position.y + i * y][position.x + i * x] === Cell.empty
+          ) {
             suggestions.push({ x: position.x + i * x, y: position.y + i * y });
           }
         }

@@ -9,6 +9,13 @@ var Cell;
     Cell["suggestion"] = "0";
 })(Cell = exports.Cell || (exports.Cell = {}));
 const opponent = (player) => player === Cell.player1 ? Cell.player2 : Cell.player1;
+// check if position inside board dimensions
+const dimensionsGuard = (board, position, x, y, i) => {
+    return (position.y + i * y < board.length &&
+        position.y + i * y >= 0 &&
+        position.x + i * x < board[board.length - 1].length &&
+        position.x + i * x >= 0);
+};
 const initialState = [
     [".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", "."],
@@ -64,10 +71,12 @@ class Game {
             Object.values(directions).forEach(({ x, y }) => {
                 let i = 1;
                 //   check if next cell is opponent
-                while (board[position.y + i * y][position.x + i * x] === opponent(player)) {
+                while (dimensionsGuard(board, position, x, y, i) &&
+                    board[position.y + i * y][position.x + i * x] === opponent(player)) {
                     i++;
                     //   if cell is empty, set new suggestion
-                    if (board[position.y + i * y][position.x + i * x] === Cell.empty) {
+                    if (dimensionsGuard(board, position, x, y, i) &&
+                        board[position.y + i * y][position.x + i * x] === Cell.empty) {
                         suggestions.push({ x: position.x + i * x, y: position.y + i * y });
                     }
                 }
