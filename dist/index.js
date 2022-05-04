@@ -19,6 +19,16 @@ const initialState = [
     [".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", "."],
 ];
+const directions = {
+    RIGHT: { x: 1, y: 0 },
+    LEFT: { x: -1, y: 0 },
+    TOP: { x: 0, y: -1 },
+    BOTTOM: { x: 0, y: 1 },
+    TOPRIGHT: { x: 1, y: -1 },
+    TOPLEFT: { x: -1, y: -1 },
+    BOTTOMRIGHT: { x: 1, y: 1 },
+    BOTTOMLEFT: { x: -1, y: 1 },
+};
 class BoardGame {
     constructor(state = initialState) {
         this.state = state;
@@ -51,14 +61,17 @@ class Game {
         const positions = this.getPositions(board, player);
         const suggestions = [];
         positions.forEach((position) => {
-            // RIGHT DIRECTION
-            if (board[position.y][position.x + 1] === opponent(this.currentPlayer)) {
-                suggestions.push({ x: position.x + 2, y: position.y });
-            }
-            // LEFT DIRECTION
-            if (board[position.y][position.x - 1] === opponent(this.currentPlayer)) {
-                suggestions.push({ x: position.x - 2, y: position.y });
-            }
+            Object.values(directions).forEach(({ x, y }) => {
+                let i = 1;
+                //   check if next cell is opponent
+                while (board[position.y + i * y][position.x + i * x] === opponent(player)) {
+                    i++;
+                    //   if cell is empty, set new suggestion
+                    if (board[position.y + i * y][position.x + i * x] === Cell.empty) {
+                        suggestions.push({ x: position.x + i * x, y: position.y + i * y });
+                    }
+                }
+            });
         });
         return suggestions;
     }
@@ -76,7 +89,7 @@ const game = new Game(boardGame, Cell.player1);
 console.log(boardGame.display());
 console.log(game.currentPlayer);
 console.log("current positions : ", game.getPositions());
-game.play();
 console.log("suggestions : ", game.getSuggestions());
+game.play();
 console.log(boardGame.display());
 //# sourceMappingURL=index.js.map
